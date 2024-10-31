@@ -1,7 +1,5 @@
 package frc.team5115.subsystems.sensor;
 
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import org.littletonrobotics.junction.Logger;
 
@@ -17,9 +15,5 @@ public class Sensor extends SubsystemBase {
   public void periodic() {
     io.updateInputs(inputs);
     Logger.processInputs(getName(), inputs);
-  }
-
-  public Command printState() {
-    return Commands.print("Something Detected?" + inputs.somethingDetected);
   }
 }

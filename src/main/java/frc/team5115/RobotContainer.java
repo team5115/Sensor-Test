@@ -21,6 +21,7 @@ public class RobotContainer {
         sensor = new Sensor(new SensorIO() {});
         break;
     }
-    sensor.setDefaultCommand(sensor.printState());
   }
+
+  public void robotPeriodic() {}
 }

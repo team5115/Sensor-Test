@@ -13,6 +13,8 @@
 
 package frc.team5115;
 
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import java.io.File;
 import org.littletonrobotics.junction.LogFileUtil;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -30,6 +32,7 @@ import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 public class Robot extends LoggedRobot {
   private static final String defaultAuto = "Default";
   private static final String customAuto = "My Auto";
+  private RobotContainer robotContainer;
   private String autoSelected;
   private final LoggedDashboardChooser<String> chooser =
       new LoggedDashboardChooser<>("Auto Choices");
@@ -62,7 +65,12 @@ public class Robot extends LoggedRobot {
     switch (Constants.currentMode) {
       case REAL:
         // Running on a real robot, log to a USB stick ("/U/logs")
-        Logger.addDataReceiver(new WPILOGWriter());
+        String path = "/U/logs";
+        var directory = new File(path);
+        if (!directory.exists()) {
+          directory.mkdir();
+        }
+        Logger.addDataReceiver(new WPILOGWriter(path));
         Logger.addDataReceiver(new NT4Publisher());
         break;
 
@@ -85,6 +93,7 @@ public class Robot extends LoggedRobot {
 
     // Start AdvantageKit logger
     Logger.start();
+    robotContainer = new RobotContainer();
 
     // Initialize auto chooser
     chooser.addDefaultOption("Default Auto", defaultAuto);
@@ -93,7 +102,15 @@ public class Robot extends LoggedRobot {
 
   /** This function is called periodically during all modes. */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    // Runs the Scheduler. This is responsible for polling buttons, adding
+    // newly-scheduled commands, running already-scheduled commands, removing
+    // finished or interrupted commands, and running subsystem periodic() methods.
+    // This must be called from the robot's periodic block in order for anything in
+    // the Command-based framework to work.
+    CommandScheduler.getInstance().run();
+    robotContainer.robotPeriodic();
+  }
 
   /** This function is called once when autonomous is enabled. */
   @Override

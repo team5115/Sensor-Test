@@ -11,6 +11,6 @@ public class SensorIOPololu implements SensorIO {
 
   @Override
   public void updateInputs(SensorIOInputs inputs) {
-    inputs.somethingDetected = sensor.get();
+    inputs.somethingDetected = !sensor.get();
   }
 }
